@@ -10,6 +10,7 @@ This project provides a lightweight registry for [Model Context Protocol](https:
 - **Remove a server** with `DELETE /servers/:name`
 - **Discover public servers** with `GET /smithery` (requires `SMITHERY_TOKEN`)
 
+
 The service is implemented in TypeScript using Express and stores data in memory.
 
 ## Development
@@ -24,3 +25,4 @@ The registry will start on port `4000` by default. Use `npm run build` to compil
 ### Smithery Registry Integration
 
 Set the environment variable `SMITHERY_TOKEN` with your Smithery API token. Then call `/smithery` to retrieve the current list of MCP servers from the hosted registry.
+
