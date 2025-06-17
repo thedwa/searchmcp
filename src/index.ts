@@ -1,4 +1,6 @@
 import express, { Request, Response } from 'express';
+import { fetchSmitheryServers } from './smithery.js';
+
 
 export interface MCPServerInfo {
   name: string;
@@ -43,6 +45,25 @@ app.delete('/servers/:name', (req: Request, res: Response) => {
     return res.json({ message: `Server ${name} removed from registry.` });
   }
   return res.status(404).json({ error: 'Server not found in registry' });
+});
+
+app.get('/smithery', async (req: Request, res: Response) => {
+  const token = process.env.SMITHERY_TOKEN;
+  if (!token) {
+    return res.status(500).json({ error: 'SMITHERY_TOKEN not set' });
+  }
+  try {
+    const { q, page, pageSize } = req.query;
+    const data = await fetchSmitheryServers(token, {
+      q: typeof q === 'string' ? q : undefined,
+      page: typeof page === 'string' ? parseInt(page, 10) : undefined,
+      pageSize: typeof pageSize === 'string' ? parseInt(pageSize, 10) : undefined,
+    });
+    return res.json(data);
+  } catch (err) {
+    console.error(err);
+    return res.status(502).json({ error: 'Failed to contact Smithery registry' });
+  }
 });
 
 const PORT = process.env.PORT || 4000;
